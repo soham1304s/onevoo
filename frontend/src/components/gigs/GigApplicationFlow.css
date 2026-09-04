@@ -1,0 +1,609 @@
+/* src/components/gigs/GigApplicationFlow.css */
+
+.gig-app-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background-color: rgba(5, 5, 8, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.gig-app-modal {
+  width: 100%;
+  max-width: 1020px;
+  max-height: 92vh;
+  overflow-y: auto;
+  border-radius: 24px;
+  border: 1px solid var(--satin-border);
+  background: var(--satin-bg);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(320px, 1.05fr) minmax(340px, 1.15fr);
+  gap: 0;
+}
+
+.gig-app-close-btn {
+  position: absolute;
+  top: 16px;
+  right: 18px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--satin-border);
+  color: var(--paper-soft);
+  border-radius: 50%;
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  font-size: 14px;
+  font-weight: 700;
+  transition: all 0.2s ease;
+}
+
+.gig-app-close-btn:hover {
+  transform: scale(1.08);
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* Left Column */
+.gig-app-left-col {
+  padding: 32px 28px;
+  border-right: 1px solid var(--satin-border);
+  background: rgba(0, 0, 0, 0.18);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.gig-app-brand-badge {
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  font-weight: 700;
+  color: var(--accent-green);
+}
+
+.gig-app-title {
+  font-size: 24px;
+  margin: 0 0 6px;
+  font-weight: 800;
+  line-height: 1.2;
+  color: var(--paper-soft);
+}
+
+.gig-app-brand-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.gig-app-brand-name {
+  font-size: 12px;
+  color: var(--accent-gold);
+  font-weight: 700;
+}
+
+.gig-app-brand-city {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+/* Transparency & Score Card */
+.gig-app-transparency-card {
+  padding: 14px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--satin-border);
+}
+
+.gig-app-transparency-title {
+  font-size: 10px;
+  color: var(--text-muted);
+  display: block;
+  margin-bottom: 8px;
+  letter-spacing: 0.06em;
+  font-weight: 700;
+}
+
+.gig-app-metrics-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+  text-align: center;
+}
+
+.gig-app-metric-tile {
+  padding: 8px 4px;
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: 8px;
+  border: 1px solid var(--satin-border);
+}
+
+.gig-app-metric-label {
+  font-size: 10px;
+  color: var(--text-muted);
+  display: block;
+  font-weight: 600;
+}
+
+.gig-app-metric-val {
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.gig-app-metric-val.green { color: var(--accent-green); }
+.gig-app-metric-val.gold { color: var(--accent-gold); }
+.gig-app-metric-val.purple { color: var(--accent-purple); }
+
+/* Eligibility Match Matrix */
+.gig-app-matrix-card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.gig-app-matrix-title {
+  font-size: 10px;
+  color: var(--text-muted);
+  display: block;
+  margin-bottom: 4px;
+  letter-spacing: 0.06em;
+  font-weight: 700;
+}
+
+.gig-app-matrix-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, 0.035);
+  border-radius: 8px;
+  border: 1px solid var(--satin-border);
+}
+
+.gig-app-matrix-label {
+  font-size: 11px;
+  color: var(--paper-soft);
+}
+
+.gig-app-matrix-status {
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.gig-app-matrix-status.passed { color: var(--accent-green); }
+.gig-app-matrix-status.deficit { color: var(--accent-rose); }
+
+/* Directive Quote Box */
+.gig-app-directive-box {
+  padding: 10px 14px;
+  border-left: 3px solid var(--accent-gold);
+  background: rgba(223, 182, 64, 0.07);
+  border-radius: 0 8px 8px 0;
+}
+
+.gig-app-directive-title {
+  font-size: 10px;
+  color: var(--accent-gold);
+  display: block;
+  margin-bottom: 3px;
+  font-weight: 700;
+}
+
+.gig-app-directive-text {
+  font-size: 11px;
+  color: var(--paper-soft);
+  margin: 0;
+  font-style: italic;
+  line-height: 1.45;
+}
+
+/* Right Column */
+.gig-app-right-col {
+  padding: 32px 32px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background: var(--satin-bg);
+}
+
+.gig-app-negotiation-header {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.gig-app-engine-tag {
+  font-size: 10px;
+  color: var(--accent-purple);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+.gig-app-escrow-pill {
+  font-size: 10px;
+  color: var(--accent-green);
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-weight: 700;
+}
+
+.gig-app-section-title {
+  font-size: 20px;
+  margin: 4px 0 2px;
+  font-weight: 800;
+  color: var(--paper-soft);
+}
+
+.gig-app-section-sub {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* Satoshi Slider Card */
+.gig-app-slider-card {
+  padding: 18px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--satin-border);
+}
+
+.gig-app-ask-rate-display {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--accent-gold);
+}
+
+.gig-app-target-rate-display {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--paper-soft);
+}
+
+.gig-app-slider-input {
+  width: 100%;
+  accent-color: var(--accent-gold);
+  cursor: pointer;
+  height: 6px;
+  border-radius: 4px;
+  margin: 10px 0;
+}
+
+/* Cost Split Outliner */
+.gig-app-cost-card {
+  padding: 16px;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid var(--satin-border);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.gig-app-cost-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.gig-app-cost-row.total {
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--paper-soft);
+  padding-top: 4px;
+}
+
+.gig-app-net-payout {
+  color: var(--accent-green);
+  font-size: 17px;
+  font-weight: 800;
+}
+
+/* AI Package Compromise Advice */
+.gig-app-ai-box {
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: rgba(112, 37, 225, 0.1);
+  border: 1px solid rgba(112, 37, 225, 0.3);
+}
+
+.gig-app-ai-title {
+  font-size: 10px;
+  color: var(--accent-purple);
+  font-weight: 700;
+}
+
+.gig-app-ai-text {
+  font-size: 11px;
+  color: var(--paper-soft);
+  margin: 4px 0 8px;
+  line-height: 1.4;
+}
+
+.gig-app-ai-shift-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--accent-purple);
+  color: var(--accent-purple);
+  padding: 5px 12px;
+  border-radius: 6px;
+  font-size: 10px;
+  cursor: pointer;
+  font-weight: 700;
+  transition: all 0.2s ease;
+}
+
+.gig-app-ai-shift-btn.active {
+  background: var(--accent-purple);
+  color: #ffffff;
+}
+
+/* Pitch Textarea */
+.gig-app-pitch-input {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--satin-border);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--paper-soft);
+  font-size: 12px;
+  font-family: inherit;
+  resize: none;
+  box-sizing: border-box;
+}
+
+.gig-app-submit-btn {
+  width: 100%;
+  padding: 14px;
+  background: var(--accent-purple);
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  box-shadow: 0 0 24px rgba(112, 37, 225, 0.4);
+  cursor: pointer;
+  border-radius: 10px;
+  border: none;
+  transition: all 0.2s ease;
+}
+
+.gig-app-submit-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 0 30px rgba(112, 37, 225, 0.6);
+}
+
+/* ==========================================================================
+   LIGHT MODE CONTRAST & READABILITY ENGINE ([data-theme="light"])
+   ========================================================================== */
+[data-theme="light"] .gig-app-overlay {
+  background-color: rgba(15, 23, 42, 0.65) !important;
+}
+
+[data-theme="light"] .gig-app-modal {
+  background: #ffffff !important;
+  border-color: rgba(23, 56, 45, 0.18) !important;
+  box-shadow: 0 32px 75px rgba(23, 56, 45, 0.22), 0 0 0 1px rgba(23, 56, 45, 0.08) !important;
+}
+
+[data-theme="light"] .gig-app-close-btn {
+  background: #f1f5f9 !important;
+  border-color: #cbd5e1 !important;
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .gig-app-close-btn:hover {
+  background: #e2e8f0 !important;
+  color: #000000 !important;
+}
+
+/* Left Column in Light Mode */
+[data-theme="light"] .gig-app-left-col {
+  background: #fbf9f4 !important;
+  border-right-color: rgba(23, 56, 45, 0.14) !important;
+}
+
+[data-theme="light"] .gig-app-brand-badge {
+  color: #047857 !important;
+}
+
+[data-theme="light"] .gig-app-title {
+  color: #0f291e !important;
+}
+
+[data-theme="light"] .gig-app-brand-name {
+  color: #92400e !important;
+}
+
+[data-theme="light"] .gig-app-brand-city {
+  color: #475569 !important;
+}
+
+[data-theme="light"] .gig-app-transparency-card {
+  background: #ffffff !important;
+  border-color: rgba(23, 56, 45, 0.14) !important;
+  box-shadow: 0 2px 8px rgba(23, 56, 45, 0.04) !important;
+}
+
+[data-theme="light"] .gig-app-transparency-title {
+  color: #334155 !important;
+}
+
+[data-theme="light"] .gig-app-metric-tile {
+  background: #f8fafc !important;
+  border-color: rgba(23, 56, 45, 0.1) !important;
+}
+
+[data-theme="light"] .gig-app-metric-label {
+  color: #475569 !important;
+}
+
+[data-theme="light"] .gig-app-metric-val.green { color: #059669 !important; }
+[data-theme="light"] .gig-app-metric-val.gold { color: #b45309 !important; }
+[data-theme="light"] .gig-app-metric-val.purple { color: #6d28d9 !important; }
+
+/* Matrix in Light Mode */
+[data-theme="light"] .gig-app-matrix-title {
+  color: #334155 !important;
+}
+
+[data-theme="light"] .gig-app-matrix-row {
+  background: #ffffff !important;
+  border-color: rgba(23, 56, 45, 0.12) !important;
+  box-shadow: 0 1px 4px rgba(23, 56, 45, 0.03) !important;
+}
+
+[data-theme="light"] .gig-app-matrix-label {
+  color: #1f2937 !important;
+  font-weight: 600;
+}
+
+[data-theme="light"] .gig-app-matrix-status.passed {
+  color: #047857 !important;
+}
+
+[data-theme="light"] .gig-app-matrix-status.deficit {
+  color: #b91c1c !important;
+}
+
+[data-theme="light"] .gig-app-directive-box {
+  background: rgba(217, 119, 6, 0.08) !important;
+  border-left-color: #b45309 !important;
+}
+
+[data-theme="light"] .gig-app-directive-title {
+  color: #92400e !important;
+}
+
+[data-theme="light"] .gig-app-directive-text {
+  color: #1e293b !important;
+}
+
+/* Right Column in Light Mode */
+[data-theme="light"] .gig-app-right-col {
+  background: #ffffff !important;
+}
+
+[data-theme="light"] .gig-app-engine-tag {
+  color: #6d28d9 !important;
+}
+
+[data-theme="light"] .gig-app-escrow-pill {
+  background: rgba(5, 150, 105, 0.12) !important;
+  border-color: rgba(5, 150, 105, 0.3) !important;
+  color: #065f46 !important;
+}
+
+[data-theme="light"] .gig-app-section-title {
+  color: #0f291e !important;
+}
+
+[data-theme="light"] .gig-app-section-sub {
+  color: #475569 !important;
+}
+
+[data-theme="light"] .gig-app-slider-card {
+  background: #fbf9f4 !important;
+  border-color: rgba(23, 56, 45, 0.14) !important;
+  box-shadow: 0 2px 8px rgba(23, 56, 45, 0.04) !important;
+}
+
+[data-theme="light"] .gig-app-slider-card .mono {
+  color: #475569 !important;
+}
+
+[data-theme="light"] .gig-app-ask-rate-display {
+  color: #b45309 !important;
+}
+
+[data-theme="light"] .gig-app-target-rate-display {
+  color: #0f291e !important;
+}
+
+[data-theme="light"] .gig-app-cost-card {
+  background: #f8fafc !important;
+  border-color: rgba(23, 56, 45, 0.14) !important;
+}
+
+[data-theme="light"] .gig-app-cost-row {
+  color: #334155 !important;
+}
+
+[data-theme="light"] .gig-app-cost-row .mono {
+  color: #0f172a !important;
+  font-weight: 700;
+}
+
+[data-theme="light"] .gig-app-cost-row.total {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .gig-app-net-payout {
+  color: #047857 !important;
+}
+
+[data-theme="light"] .gig-app-ai-box {
+  background: rgba(109, 40, 217, 0.07) !important;
+  border-color: rgba(109, 40, 217, 0.25) !important;
+}
+
+[data-theme="light"] .gig-app-ai-title {
+  color: #5b21b6 !important;
+}
+
+[data-theme="light"] .gig-app-ai-text {
+  color: #1e293b !important;
+}
+
+[data-theme="light"] .gig-app-ai-shift-btn {
+  background: #ffffff !important;
+  border-color: #6d28d9 !important;
+  color: #6d28d9 !important;
+}
+
+[data-theme="light"] .gig-app-ai-shift-btn.active {
+  background: #6d28d9 !important;
+  color: #ffffff !important;
+}
+
+[data-theme="light"] .gig-app-pitch-input {
+  background: #ffffff !important;
+  border-color: rgba(23, 56, 45, 0.22) !important;
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .gig-app-pitch-input::placeholder {
+  color: #64748b !important;
+}
+
+[data-theme="light"] .gig-app-submit-btn {
+  background: linear-gradient(135deg, #c58c13 0%, #a67207 100%) !important;
+  color: #ffffff !important;
+  box-shadow: 0 6px 20px rgba(197, 140, 19, 0.35) !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 860px) {
+  .gig-app-modal {
+    grid-template-columns: 1fr;
+    max-height: 95vh;
+  }
+  .gig-app-left-col {
+    border-right: none;
+    border-bottom: 1px solid var(--satin-border);
+    padding: 24px 20px;
+  }
+  .gig-app-right-col {
+    padding: 24px 20px;
+  }
+}
