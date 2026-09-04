@@ -40,7 +40,7 @@ export const DashboardShell = ({ initialRole = "CREATOR" }) => {
         minHeight: "100vh",
         background: "var(--ink)",
         color: "var(--paper-soft)",
-        overflow: "hidden",
+        overflow: "visible",
         display: "flex",
         flexDirection: "column",
       }}
@@ -326,7 +326,7 @@ export const DashboardShell = ({ initialRole = "CREATOR" }) => {
         </aside>
 
         {/* Dynamic Role Workspace Main Content */}
-        <main className="dashboard-main-content" style={{ flex: 1, overflowY: "auto", minWidth: 0 }}>
+        <main className="dashboard-main-content" style={{ flex: 1, minWidth: 0 }}>
           {currentRole === "CREATOR" && <CreatorCommandCenter />}
           {currentRole === "BRAND" && <BrandCollaborationDesk />}
           {currentRole === "MANAGER" && <ManagerRosterGrid />}

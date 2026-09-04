@@ -23,16 +23,28 @@ for (const envFile of envCandidates) {
 }
 
 const dbUrl = process.env.DATABASE_URL;
-if (!dbUrl) {
-  console.warn('⚠️ DATABASE_URL environment variable is not configured. Please set DATABASE_URL in .env');
-}
 
-export const sql = neon(dbUrl || 'postgresql://placeholder:placeholder@ep-placeholder.neon.tech/neondb');
+export const isRealDbConfigured = Boolean(
+  dbUrl &&
+  !dbUrl.includes('placeholder') &&
+  !dbUrl.includes('endpoint.neon.tech') &&
+  !dbUrl.includes('user:password')
+);
+
+export const sql = isRealDbConfigured
+  ? neon(dbUrl)
+  : async () => { throw new Error('Database is running in Zero-Config In-Memory Mode'); };
 
 /**
  * Auto-initialize Neon PostgreSQL Database Schema for Authentication & Onevoo OS
  */
 export async function initializeDatabase() {
+  if (!isRealDbConfigured) {
+    console.log('⚡ Zero-Config Mode: Backend running with In-Memory Persistence.');
+    console.log('💡 To enable Neon PostgreSQL, update DATABASE_URL in backend/.env with your live connection string.');
+    return false;
+  }
+
   console.log('🔄 Initializing Neon Database tables...');
   try {
     // 1. Enable UUID Extension

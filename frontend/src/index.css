@@ -502,20 +502,6 @@ html, body {
 }
 
 /* Auth & Forms */
-[data-theme="light"] .auth-card {
-  background: rgba(255, 255, 255, 0.9);
-  border-color: rgba(139, 92, 246, 0.3);
-}
-
-[data-theme="light"] .auth-intro {
-  background: linear-gradient(145deg, #f1f5f9, #e2e8f0);
-}
-
-[data-theme="light"] .auth-intro h1 {
-  color: #0f172a;
-}
-
-[data-theme="light"] .auth-form input,
 [data-theme="light"] .search-input,
 [data-theme="light"] .sort-select {
   background: #ffffff;
@@ -4012,192 +3998,6 @@ h1 em:hover, h2 em:hover {
   .contract-fields {
     grid-template-columns: 1fr;
   }
-
-  .contract-fields>div {
-    padding-left: 0;
-  }
-}
-
-/* VERIFIED ACCOUNT AUTHENTICATION */
-.auth-page {
-  min-height: calc(100vh - 180px);
-  display: grid;
-  place-items: center;
-  padding: 110px 24px 80px;
-}
-
-.auth-card {
-  width: min(100%, 980px);
-  display: grid;
-  grid-template-columns: .92fr 1.08fr;
-  overflow: hidden;
-  border: 1px solid var(--line-strong);
-  border-radius: 12px;
-  background: var(--panel);
-  box-shadow: 0 12px 35px rgba(0, 0, 0, .25);
-}
-.auth-intro {
-  padding: 48px;
-  background: radial-gradient(circle at 10% 10%, rgba(124, 92, 255, .3), transparent 46%), linear-gradient(145deg, #1b1730, #101018);
-}
-
-.auth-intro .mono {
-  color: var(--c-green);
-  font-size: 11px;
-  text-transform: uppercase;
-}
-
-.auth-intro h1 {
-  font-size: clamp(30px, 4vw, 47px);
-  line-height: .98;
-  margin: 18px 0;
-}
-
-.auth-intro p {
-  color: var(--mute);
-  line-height: 1.6;
-}
-
-.auth-assurances {
-  display: grid;
-  gap: 11px;
-  margin-top: 35px;
-  color: var(--paper);
-  font-size: 13px;
-}
-
-.auth-assurances span::first-letter {
-  color: var(--c-green);
-}
-
-.auth-form {
-  padding: 42px;
-  display: flex;
-  flex-direction: column;
-  gap: 17px;
-}
-
-.auth-mode {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  padding: 4px;
-  border-radius: 9px;
-  background: rgba(255, 255, 255, .04);
-  margin-bottom: 4px;
-}
-
-.auth-mode button {
-  padding: 10px;
-  border: 0;
-  border-radius: 6px;
-  background: transparent;
-  color: var(--mute);
-  cursor: pointer;
-  font: 700 12px "Inter", sans-serif;
-}
-
-.auth-mode button.active {
-  background: var(--panel-light);
-  color: var(--paper);
-}
-
-.auth-form label {
-  display: grid;
-  gap: 8px;
-  color: var(--paper);
-  font-size: 12px;
-  font-weight: 700;
-}
-
-.auth-form input {
-  width: 100%;
-  border: 1px solid var(--line-strong);
-  border-radius: 7px;
-  background: var(--ink);
-  color: var(--paper);
-  padding: 13px;
-  font: 14px "Inter", sans-serif;
-}
-
-.auth-form input:focus {
-  outline: 2px solid rgba(124, 92, 255, .5);
-  border-color: var(--c-purple);
-}
-
-.password-help,
-.auth-legal {
-  color: var(--mute);
-  font-size: 11px;
-  line-height: 1.5;
-}
-
-.auth-submit {
-  width: 100%;
-  justify-content: center;
-  margin-top: 3px;
-}
-
-.auth-submit:disabled {
-  opacity: .65;
-  cursor: wait;
-}
-
-.auth-message {
-  padding: 10px 12px;
-  border-left: 2px solid var(--c-green);
-  background: rgba(0, 238, 209, .06);
-  color: var(--paper);
-  font-size: 12px;
-  line-height: 1.5;
-}
-
-.auth-legal a {
-  color: var(--c-purple);
-}
-
-.auth-gate {
-  min-height: 60vh;
-  display: grid;
-  place-content: center;
-  text-align: center;
-  gap: 14px;
-  padding: 100px 24px;
-}
-
-.auth-gate .mono {
-  color: var(--c-purple);
-  font-size: 11px;
-  text-transform: uppercase;
-}
-
-.auth-gate h1 {
-  font-size: 36px;
-}
-
-.auth-gate p {
-  color: var(--mute);
-  max-width: 420px;
-  line-height: 1.5;
-}
-
-.auth-gate .btn {
-  justify-self: center;
-  margin-top: 6px;
-}
-
-@media (max-width: 720px) {
-  .auth-card {
-    grid-template-columns: 1fr;
-  }
-
-  .auth-intro,
-  .auth-form {
-    padding: 30px 24px;
-  }
-
-  .auth-page {
-    padding-top: 90px;
-  }
 }
 
 /* OPPORTUNITY PULSE — FILLS THE STORY-CARD GRID GAP */
@@ -6476,6 +6276,45 @@ img, video, canvas, svg {
 }
 
 /* ── 8. DASHBOARD SHELL ADAPTIVE ENGINE ── */
+/* PC View Sticky Sidebar Fix (Desktop Only) */
+@media (min-width: 769px) {
+  .dashboard-shell-root {
+    overflow: visible !important;
+  }
+
+  .dashboard-layout-container {
+    align-items: flex-start !important;
+    padding-top: 72px !important;
+  }
+
+  .dashboard-sidebar {
+    position: sticky !important;
+    top: 72px !important;
+    align-self: flex-start !important;
+    height: calc(100vh - 72px) !important;
+    max-height: calc(100vh - 72px) !important;
+    overflow-y: auto !important;
+    box-sizing: border-box !important;
+    z-index: 10 !important;
+    flex-shrink: 0 !important;
+  }
+
+  /* Custom sleek scrollbar for sidebar on desktop */
+  .dashboard-sidebar::-webkit-scrollbar {
+    width: 4px;
+  }
+  .dashboard-sidebar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .dashboard-sidebar::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 4px;
+  }
+  .dashboard-sidebar::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3);
+  }
+}
+
 @media (max-width: 768px) {
   .dashboard-layout-container {
     flex-direction: column !important;
@@ -6483,6 +6322,10 @@ img, video, canvas, svg {
   }
 
   .dashboard-sidebar {
+    position: relative !important;
+    top: 0 !important;
+    height: auto !important;
+    max-height: none !important;
     width: 100% !important;
     min-width: 0 !important;
     border-right: none !important;

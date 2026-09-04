@@ -109,19 +109,21 @@ export default function SecurePasswordField({
     <div className="secure-password-group" style={{ marginBottom: "20px" }}>
       {label && (
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px" }}>
-          <label htmlFor={id} className="mono" style={{ fontSize: "11px", margin: 0 }}>
+          <label htmlFor={id} style={{ fontSize: "11px", margin: 0, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em" }}>
             {label}
           </label>
           {showForgotPassword && onForgotPassword && (
             <button
               type="button"
               onClick={onForgotPassword}
-              className="forgot-link mono"
+              className="forgot-link"
               style={{
                 background: "transparent",
                 border: "none",
-                color: "var(--accent-purple)",
+                color: "var(--accent-purple, #a78bfa)",
                 fontSize: "11px",
+                fontFamily: "Inter, sans-serif",
+                fontWeight: 600,
                 cursor: "pointer",
                 padding: 0,
                 textDecoration: "underline",
