@@ -2936,6 +2936,11 @@ async function startServer() {
     console.warn('⚠️ Server will still listen on port ' + PORT + '. Update DATABASE_URL in .env to connect to your Neon database.');
   }
 
+  app.listen(PORT, () => {
+    console.log(`🚀 Onevoo Backend API running on port ${PORT}`);
+  });
+}
+
 if (process.env.NODE_ENV !== 'test' && !process.env.VERCEL) {
   startServer();
 }
