@@ -3,7 +3,7 @@ import { useNotifications } from "../context/NotificationContext";
 import Logo from "./Logo";
 import AdminReelModeration from "./AdminReelModeration";
 
-const API_BASE = "http://localhost:3001/api";
+const API_BASE = "/api";
 
 export default function EnterpriseConsole() {
   const { addNotification } = useNotifications();

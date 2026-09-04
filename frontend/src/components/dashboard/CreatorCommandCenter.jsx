@@ -151,7 +151,7 @@ export default function CreatorCommandCenter() {
     setFactoringLoading(true);
     try {
       const advanceVal = Math.round(totalPendingEscrow * 0.95);
-      const res = await fetch("http://localhost:3001/api/factoring/disburse", {
+      const res = await fetch("/api/factoring/disburse", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -222,7 +222,7 @@ export default function CreatorCommandCenter() {
   // v10 Predictive Risk Mitigation Handler
   const handleAutoMitigateRisk = async (dealId, brandName) => {
     try {
-      const res = await fetch("http://localhost:3001/api/deals/auto-mitigate", {
+      const res = await fetch("/api/deals/auto-mitigate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ dealId, dealBrand: brandName })
@@ -250,7 +250,7 @@ export default function CreatorCommandCenter() {
 
   const handleFetchQuoteOptimization = async (brandName, askingRate) => {
     try {
-      const res = await fetch("http://localhost:3001/api/deals/optimize-quote", {
+      const res = await fetch("/api/deals/optimize-quote", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

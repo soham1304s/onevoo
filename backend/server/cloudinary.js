@@ -96,44 +96,47 @@ console.log(`☁️ Cloudinary configured (Cloud: ${config.cloudName}, API Key: 
  * @returns {Promise<Object>}
  */
 export async function uploadVideoToCloudinary(buffer, options = {}) {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     // If credentials are fully present, upload via stream
     if (config.apiKey && config.apiSecret && config.cloudName) {
+      let finished = false;
+      const timeout = setTimeout(() => {
+        if (!finished) {
+          finished = true;
+          console.warn('⚠️ Cloudinary video upload stream timed out (12s threshold). Using fallback video asset...');
+          resolve(generateLocalOrFallbackReel(buffer, options));
+        }
+      }, 12000);
+
       const uploadOptions = {
         resource_type: 'video',
         folder: options.folder || 'onevoo_reels',
         public_id: options.publicId || `reel_${Date.now()}_${Math.floor(Math.random() * 10000)}`,
-        eager: [
-          { format: 'jpg', transformation: [{ width: 450, height: 800, crop: 'pad', background: 'black' }] }
-        ],
-        eager_async: false,
         ...options,
       };
 
       const uploadStream = cloudinary.uploader.upload_stream(
         uploadOptions,
         (error, result) => {
+          if (finished) return;
+          finished = true;
+          clearTimeout(timeout);
+
           if (error) {
-            console.error('Cloudinary upload error:', error);
-            // If Cloudinary rejects due to invalid cloud name in demo, return fallback
-            if (error.http_code === 401 || error.http_code === 400 || error.message?.includes('Must supply') || error.message?.includes('Invalid')) {
-              console.warn('⚠️ Cloudinary direct stream failed, generating fallback reel asset URL...');
-              return resolve(generateLocalOrFallbackReel(buffer, options));
-            }
-            return reject(error);
+            console.error('Cloudinary video upload error:', error.message || error);
+            console.warn('⚠️ Cloudinary direct video stream failed, generating fallback reel asset URL...');
+            return resolve(generateLocalOrFallbackReel(buffer, options));
           }
           
-          // Generate poster/thumbnail URL from video public_id
-          const thumbnailUrl = result.eager && result.eager[0] 
-            ? result.eager[0].secure_url 
-            : cloudinary.url(result.public_id, {
-                resource_type: 'video',
-                format: 'jpg',
-                width: 450,
-                height: 800,
-                crop: 'fill',
-                start_offset: '1',
-              });
+          // Generate poster/thumbnail URL dynamically from video public_id
+          const thumbnailUrl = cloudinary.url(result.public_id, {
+            resource_type: 'video',
+            format: 'jpg',
+            width: 450,
+            height: 800,
+            crop: 'fill',
+            start_offset: '1',
+          });
 
           resolve({
             videoUrl: result.secure_url,

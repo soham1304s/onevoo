@@ -1583,73 +1583,161 @@ app.post('/api/reels/upload', upload.fields([{ name: 'video', maxCount: 1 }, { n
       thumbnailUrl = getThemedPosterServer(title, brandName);
     }
 
+// In-Memory Reels & Notifications Store (Used when Neon Database is running in Zero-Config mode)
+const IN_MEMORY_REELS = [
+  {
+    id: 'reel-mem-1',
+    user_id: null,
+    creator_name: 'Tanvi Sharma',
+    creator_handle: 'tanvi.creates',
+    creator_avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&q=80',
+    creator_email: 'creator@onevoo.com',
+    city: 'Mumbai, Maharashtra',
+    brand_name: 'Nykaa Beauty',
+    title: 'Monsoon Barrier Glow 4K',
+    caption: 'Dewy skin barrier tutorial shot on Sony FX3 in Mumbai.',
+    payout_display: '₹85,000 Escrow Locked',
+    video_url: 'https://assets.mixkit.co/videos/preview/mixkit-fashion-model-in-a-leather-jacket-vertical-41313-large.mp4',
+    cloudinary_public_id: null,
+    thumbnail_url: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=800&q=80',
+    status: 'APPROVED',
+    views_count: '42.8K',
+    reviewed_by: 'Onevoo Editorial Team',
+    reviewed_at: new Date().toISOString(),
+    created_at: new Date().toISOString()
+  },
+  {
+    id: 'reel-mem-2',
+    user_id: null,
+    creator_name: 'Rahul Patel',
+    creator_handle: 'rahul.films',
+    creator_avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&q=80',
+    creator_email: 'rahul@onevoo.com',
+    city: 'Bengaluru, Karnataka',
+    brand_name: 'Sony Alpha India',
+    title: 'Sony FX3 Masterclass Reel',
+    caption: 'Cinematic lighting setup for commercial brand shoots.',
+    payout_display: '₹55,000 Escrow Locked',
+    video_url: 'https://assets.mixkit.co/videos/preview/mixkit-vertical-portrait-of-a-fashion-model-in-studio-41315-large.mp4',
+    cloudinary_public_id: null,
+    thumbnail_url: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=800&q=80',
+    status: 'APPROVED',
+    views_count: '38.5K',
+    reviewed_by: 'Onevoo Editorial Team',
+    reviewed_at: new Date().toISOString(),
+    created_at: new Date().toISOString()
+  }
+];
+
+const IN_MEMORY_NOTIFICATIONS = [];
+
     // Clean up handle
     const cleanHandle = creatorHandle.startsWith('@') ? creatorHandle.slice(1) : creatorHandle;
 
-    // Insert record into Neon PostgreSQL with status PENDING
-    const newReel = await sql`
-      INSERT INTO reel_submissions (
-        user_id,
-        creator_name,
-        creator_handle,
-        creator_avatar,
-        creator_email,
-        city,
-        brand_name,
-        title,
-        caption,
-        payout_display,
-        video_url,
-        cloudinary_public_id,
-        thumbnail_url,
-        status,
-        views_count
-      )
-      VALUES (
-        ${userId || null},
-        ${creatorName.trim()},
-        ${cleanHandle.trim()},
-        ${creatorAvatar},
-        ${creatorEmail.trim()},
-        ${city.trim()},
-        ${brandName.trim()},
-        ${title.trim()},
-        ${caption.trim()},
-        ${payoutDisplay.trim()},
-        ${videoUrl},
-        ${publicId},
-        ${thumbnailUrl},
-        'PENDING',
-        '34.2K'
-      )
-      RETURNING *;
-    `;
+    let reel;
+    let notif;
 
-    const reel = newReel[0];
+    if (!isRealDbConfigured) {
+      reel = {
+        id: `reel-${Date.now()}`,
+        user_id: userId || null,
+        creator_name: creatorName.trim(),
+        creator_handle: cleanHandle.trim(),
+        creator_avatar: creatorAvatar,
+        creator_email: creatorEmail.trim(),
+        city: city.trim(),
+        brand_name: brandName.trim(),
+        title: title.trim(),
+        caption: caption.trim(),
+        payout_display: payoutDisplay.trim(),
+        video_url: videoUrl,
+        cloudinary_public_id: publicId,
+        thumbnail_url: thumbnailUrl,
+        status: 'PENDING',
+        views_count: '34.2K',
+        created_at: new Date().toISOString()
+      };
+      IN_MEMORY_REELS.unshift(reel);
 
-    // Create persistent system notification
-    await sql`
-      INSERT INTO user_notifications (
-        user_id,
-        user_email,
-        title,
-        message,
-        type,
-        status,
-        badge_color,
-        reel_id
-      )
-      VALUES (
-        ${userId || null},
-        ${creatorEmail},
-        'Reel Submitted for Admin Review',
-        ${`Your brand shoot reel "${title}" for ${brandName} has been submitted and is queued for Onevoo Admin review.`},
-        'reel_status',
-        'QUEUED',
-        'var(--accent-gold)',
-        ${reel.id}
-      );
-    `;
+      notif = {
+        id: `notif-${Date.now()}`,
+        user_id: userId || null,
+        user_email: creatorEmail,
+        title: 'Reel Submitted for Admin Review',
+        message: `Your brand shoot reel "${title}" for ${brandName} has been submitted and is queued for Onevoo Admin review.`,
+        type: 'reel_status',
+        status: 'QUEUED',
+        badge_color: 'var(--accent-gold)',
+        reel_id: reel.id,
+        created_at: new Date().toISOString()
+      };
+      IN_MEMORY_NOTIFICATIONS.unshift(notif);
+    } else {
+      // Insert record into Neon PostgreSQL with status PENDING
+      const newReel = await sql`
+        INSERT INTO reel_submissions (
+          user_id,
+          creator_name,
+          creator_handle,
+          creator_avatar,
+          creator_email,
+          city,
+          brand_name,
+          title,
+          caption,
+          payout_display,
+          video_url,
+          cloudinary_public_id,
+          thumbnail_url,
+          status,
+          views_count
+        )
+        VALUES (
+          ${userId || null},
+          ${creatorName.trim()},
+          ${cleanHandle.trim()},
+          ${creatorAvatar},
+          ${creatorEmail.trim()},
+          ${city.trim()},
+          ${brandName.trim()},
+          ${title.trim()},
+          ${caption.trim()},
+          ${payoutDisplay.trim()},
+          ${videoUrl},
+          ${publicId},
+          ${thumbnailUrl},
+          'PENDING',
+          '34.2K'
+        )
+        RETURNING *;
+      `;
+
+      reel = newReel[0];
+
+      // Create persistent system notification
+      await sql`
+        INSERT INTO user_notifications (
+          user_id,
+          user_email,
+          title,
+          message,
+          type,
+          status,
+          badge_color,
+          reel_id
+        )
+        VALUES (
+          ${userId || null},
+          ${creatorEmail},
+          'Reel Submitted for Admin Review',
+          ${`Your brand shoot reel "${title}" for ${brandName} has been submitted and is queued for Onevoo Admin review.`},
+          'reel_status',
+          'QUEUED',
+          'var(--accent-gold)',
+          ${reel.id}
+        );
+      `;
+    }
 
     res.status(201).json({
       success: true,
@@ -1665,6 +1753,11 @@ app.post('/api/reels/upload', upload.fields([{ name: 'video', maxCount: 1 }, { n
 // 2. Fetch Public Approved Reels (Featured in Creator Stories & Hits)
 app.get('/api/reels/approved', async (_req, res) => {
   try {
+    if (!isRealDbConfigured) {
+      const approved = IN_MEMORY_REELS.filter(r => r.status === 'APPROVED');
+      return res.json({ reels: approved, total: approved.length });
+    }
+
     const reels = await sql`
       SELECT * FROM reel_submissions 
       WHERE status = 'APPROVED'
@@ -1681,8 +1774,27 @@ app.get('/api/reels/approved', async (_req, res) => {
 app.get('/api/reels/admin', async (req, res) => {
   try {
     const { status = 'ALL' } = req.query;
-    let reels;
 
+    if (!isRealDbConfigured) {
+      let filtered = IN_MEMORY_REELS;
+      if (status !== 'ALL') {
+        filtered = IN_MEMORY_REELS.filter(r => r.status === status.toUpperCase());
+      }
+      const pending = IN_MEMORY_REELS.filter(r => r.status === 'PENDING').length;
+      const approved = IN_MEMORY_REELS.filter(r => r.status === 'APPROVED').length;
+      const rejected = IN_MEMORY_REELS.filter(r => r.status === 'REJECTED').length;
+      return res.json({
+        reels: filtered,
+        counts: {
+          total: filtered.length,
+          pending,
+          approved,
+          rejected
+        }
+      });
+    }
+
+    let reels;
     if (status === 'ALL') {
       reels = await sql`
         SELECT * FROM reel_submissions 
@@ -1720,6 +1832,37 @@ app.post('/api/reels/:id/approve', async (req, res) => {
   try {
     const { id } = req.params;
     const { reviewerName = 'Onevoo Editorial Team' } = req.body;
+
+    if (!isRealDbConfigured) {
+      const reel = IN_MEMORY_REELS.find(r => String(r.id) === String(id));
+      if (!reel) {
+        return res.status(404).json({ error: 'Reel submission not found.' });
+      }
+      reel.status = 'APPROVED';
+      reel.reviewed_by = reviewerName;
+      reel.reviewed_at = new Date().toISOString();
+
+      const notif = {
+        id: `notif-${Date.now()}`,
+        user_id: reel.user_id || null,
+        user_email: reel.creator_email,
+        title: 'Reel Approved & Featured!',
+        message: `🎉 Congratulations! Your brand shoot reel for ${reel.brand_name} has been approved by the Onevoo team and is now featured in Creator Stories & Hits!`,
+        type: 'reel_status',
+        status: 'FEATURED LIVE',
+        badge_color: 'var(--accent-green)',
+        reel_id: reel.id,
+        created_at: new Date().toISOString()
+      };
+      IN_MEMORY_NOTIFICATIONS.unshift(notif);
+
+      return res.json({
+        success: true,
+        reel,
+        notification: notif,
+        message: `Reel "${reel.title}" approved and featured on Onevoo Creator Stories & Hits!`
+      });
+    }
 
     const existing = await sql`SELECT * FROM reel_submissions WHERE id = ${id};`;
     if (existing.length === 0) {
@@ -1789,6 +1932,40 @@ app.post('/api/reels/:id/reject', async (req, res) => {
       reviewerName = 'Onevoo Editorial Team'
     } = req.body;
 
+    const exactMessage = `Your reel for featuring in the creator stories and gigs section not get approved by onevoo team.${reason ? ` Note: ${reason}` : ''}`;
+
+    if (!isRealDbConfigured) {
+      const reel = IN_MEMORY_REELS.find(r => String(r.id) === String(id));
+      if (!reel) {
+        return res.status(404).json({ error: 'Reel submission not found.' });
+      }
+      reel.status = 'REJECTED';
+      reel.rejection_reason = reason;
+      reel.reviewed_by = reviewerName;
+      reel.reviewed_at = new Date().toISOString();
+
+      const notif = {
+        id: `notif-${Date.now()}`,
+        user_id: reel.user_id || null,
+        user_email: reel.creator_email,
+        title: 'Reel Submission Not Approved',
+        message: exactMessage,
+        type: 'reel_status',
+        status: 'NOT APPROVED',
+        badge_color: 'var(--accent-rose)',
+        reel_id: reel.id,
+        created_at: new Date().toISOString()
+      };
+      IN_MEMORY_NOTIFICATIONS.unshift(notif);
+
+      return res.json({
+        success: true,
+        reel,
+        notification: notif,
+        message: 'Reel rejected and status notification sent to creator.'
+      });
+    }
+
     const existing = await sql`SELECT * FROM reel_submissions WHERE id = ${id};`;
     if (existing.length === 0) {
       return res.status(404).json({ error: 'Reel submission not found.' });
@@ -1809,10 +1986,6 @@ app.post('/api/reels/:id/reject', async (req, res) => {
     `;
 
     const reel = updated[0];
-
-    // EXACT REQUIRED USER MESSAGE:
-    // "your reel for featuring in the creator stories and gigs section not get approved by onevoo team."
-    const exactMessage = `Your reel for featuring in the creator stories and gigs section not get approved by onevoo team.${reason ? ` Note: ${reason}` : ''}`;
 
     const notif = await sql`
       INSERT INTO user_notifications (
@@ -1859,6 +2032,12 @@ app.post('/api/reels/:id/discard', async (req, res) => {
 app.delete('/api/reels/:id', async (req, res) => {
   try {
     const { id } = req.params;
+    if (!isRealDbConfigured) {
+      const idx = IN_MEMORY_REELS.findIndex(r => String(r.id) === String(id));
+      if (idx !== -1) IN_MEMORY_REELS.splice(idx, 1);
+      return res.json({ success: true, message: 'Reel submission deleted successfully.' });
+    }
+
     await sql`DELETE FROM reel_submissions WHERE id = ${id};`;
     res.json({ success: true, message: 'Reel submission deleted successfully.' });
   } catch (err) {
@@ -1871,6 +2050,14 @@ app.delete('/api/reels/:id', async (req, res) => {
 app.get('/api/reels/my-submissions', async (req, res) => {
   try {
     const { email } = req.query;
+    if (!isRealDbConfigured) {
+      let submissions = IN_MEMORY_REELS;
+      if (email) {
+        submissions = IN_MEMORY_REELS.filter(r => r.creator_email.toLowerCase().trim() === email.toLowerCase().trim());
+      }
+      return res.json({ submissions });
+    }
+
     let submissions;
     if (email) {
       submissions = await sql`
@@ -1896,6 +2083,14 @@ app.get('/api/reels/my-submissions', async (req, res) => {
 app.get('/api/notifications', async (req, res) => {
   try {
     const { email } = req.query;
+    if (!isRealDbConfigured) {
+      let notifs = IN_MEMORY_NOTIFICATIONS;
+      if (email) {
+        notifs = IN_MEMORY_NOTIFICATIONS.filter(n => !n.user_email || n.user_email.toLowerCase().trim() === email.toLowerCase().trim());
+      }
+      return res.json({ notifications: notifs });
+    }
+
     let notifs;
     if (email) {
       notifs = await sql`
@@ -1919,6 +2114,12 @@ app.get('/api/notifications', async (req, res) => {
 app.put('/api/notifications/:id/read', async (req, res) => {
   try {
     const { id } = req.params;
+    if (!isRealDbConfigured) {
+      const notif = IN_MEMORY_NOTIFICATIONS.find(n => String(n.id) === String(id));
+      if (notif) notif.is_read = true;
+      return res.json({ success: true });
+    }
+
     await sql`UPDATE user_notifications SET is_read = TRUE WHERE id = ${id};`;
     res.json({ success: true });
   } catch (err) {
@@ -1929,6 +2130,19 @@ app.put('/api/notifications/:id/read', async (req, res) => {
 app.post('/api/notifications/clear', async (req, res) => {
   try {
     const { email } = req.body;
+    if (!isRealDbConfigured) {
+      if (email) {
+        for (let i = IN_MEMORY_NOTIFICATIONS.length - 1; i >= 0; i--) {
+          if (IN_MEMORY_NOTIFICATIONS[i].user_email?.toLowerCase().trim() === email.toLowerCase().trim()) {
+            IN_MEMORY_NOTIFICATIONS.splice(i, 1);
+          }
+        }
+      } else {
+        IN_MEMORY_NOTIFICATIONS.length = 0;
+      }
+      return res.json({ success: true });
+    }
+
     if (email) {
       await sql`DELETE FROM user_notifications WHERE user_email = ${email.toLowerCase().trim()};`;
     } else {

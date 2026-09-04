@@ -77,7 +77,7 @@ export default function ManagerRosterGrid() {
   const fetchStandbyCrew = async () => {
     try {
       setStandbyLoading(true);
-      const res = await fetch("http://localhost:3001/api/standby-crew/on-call");
+      const res = await fetch("/api/standby-crew/on-call");
       const data = await res.json();
       if (data.crew) {
         setStandbyCrew(data.crew);
@@ -95,7 +95,7 @@ export default function ManagerRosterGrid() {
 
   const handleDispatchStandby = async (crewMember) => {
     try {
-      const res = await fetch("http://localhost:3001/api/standby-crew/dispatch", {
+      const res = await fetch("/api/standby-crew/dispatch", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

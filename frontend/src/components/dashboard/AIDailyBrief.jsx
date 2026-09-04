@@ -49,7 +49,7 @@ export const AIDailyBrief = ({ creatorName, alerts = [] }) => {
 
     try {
       setIsExecuting(true);
-      const res = await fetch("http://localhost:3001/api/ai/execute-intent", {
+      const res = await fetch("/api/ai/execute-intent", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -75,7 +75,7 @@ export const AIDailyBrief = ({ creatorName, alerts = [] }) => {
   const handleConfirmRecommendation = async () => {
     try {
       setRecProcessing(true);
-      const res = await fetch("http://localhost:3001/api/deals/auto-mitigate", {
+      const res = await fetch("/api/deals/auto-mitigate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
