@@ -57,15 +57,22 @@ function parseCloudinaryConfig() {
     }
   }
 
-  // If cloudName is still not specified, check CLOUDINARY_URL
-  if (!cloudName && cloudinaryUrl) {
-    const match = cloudinaryUrl.match(/@([^@]+)$/);
-    if (match) cloudName = match[1];
+  // If credentials are incomplete, parse from CLOUDINARY_URL if provided
+  if (cloudinaryUrl) {
+    const urlPatternMatch = cloudinaryUrl.match(/cloudinary:\/\/([^:]+):([^@]+)@(.+)/);
+    if (urlPatternMatch) {
+      if (!apiKey) apiKey = urlPatternMatch[1];
+      if (!apiSecret) apiSecret = urlPatternMatch[2];
+      if (!cloudName) cloudName = urlPatternMatch[3];
+    } else if (!cloudName) {
+      const match = cloudinaryUrl.match(/@([^@]+)$/);
+      if (match) cloudName = match[1];
+    }
   }
 
   // Default fallback cloud name for Onevoo
   if (!cloudName) {
-    cloudName = 'onevoo';
+    cloudName = 'db4grmmiw';
   }
 
   return { apiKey, apiSecret, cloudName, cloudinaryUrl };
