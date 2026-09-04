@@ -49,8 +49,11 @@ export const neonAuth = {
       headers["Authorization"] = `Bearer ${token}`;
     }
 
+    const baseUrl = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '');
+    const targetUrl = endpoint.startsWith('http') ? endpoint : `${baseUrl}${endpoint}`;
+
     try {
-      const response = await fetch(endpoint, {
+      const response = await fetch(targetUrl, {
         ...options,
         headers,
       });
@@ -58,20 +61,28 @@ export const neonAuth = {
       const data = await response.json().catch(() => ({}));
 
       if (!response.ok) {
-        // If 400 or 401 client error (e.g. invalid credentials or email taken), pass backend message
-        if (response.status < 500) {
-          throw new Error(data.error || `Authentication request failed (status ${response.status})`);
+        // Only 400 & 401 with valid JSON errors are true auth validation responses from a live backend!
+        // 404 (Not Found), 405 (Method Not Allowed), and 500+ indicate missing backend route or static hosting proxy failure.
+        if ((response.status === 400 || response.status === 401) && (data.error || data.message)) {
+          throw new Error(data.error || data.message || `Authentication failed (status ${response.status})`);
         }
-        // If 500+ server error (backend offline or unconfigured), fall through to local fallback
+        // For 404, 405, 500+ or any non-validation error, fall through to client fallback
         throw new Error(`SERVER_ERR_${response.status}`);
       }
 
       return data;
     } catch (err) {
-      // If network error, 500 server error, or fetch failure, invoke client fallback handling
-      const isServerError = err.message?.startsWith('SERVER_ERR_') || err.name === 'TypeError' || err.message?.includes('fetch') || err.message?.includes('status 500');
+      // If network error, 404/405 static server error, 500 server error, or fetch failure, invoke client fallback handling
+      const isServerError =
+        err.message?.startsWith('SERVER_ERR_') ||
+        err.name === 'TypeError' ||
+        err.message?.includes('fetch') ||
+        err.message?.includes('status 500') ||
+        err.message?.includes('status 405') ||
+        err.message?.includes('status 404');
+
       if (isServerError) {
-        console.warn(`[neonAuth] Backend server offline or error for ${endpoint}, invoking local fallback handling:`, err.message);
+        console.warn(`[neonAuth] Backend server unconfigured or error for ${endpoint}, invoking local fallback handling:`, err.message);
 
         // Fallback for /api/auth/signin
         if (endpoint === '/api/auth/signin' && options.body) {
