@@ -225,35 +225,27 @@ function UploadPanel() {
           textAlign: "center",
         }}
       >
-        <div style={{ maxWidth: "580px", margin: "0 auto" }}>
-          <div style={{ display: "inline-flex", alignItems: "center", gap: "8px", marginBottom: "12px", background: "rgba(223, 182, 64, 0.1)", padding: "4px 14px", borderRadius: "99px", border: "1px solid rgba(223, 182, 64, 0.3)" }}>
-            <span className="pulse-emerald-ring" style={{ width: "6px", height: "6px" }} />
-            <span className="tech-label-mono" style={{ fontSize: "10.5px", color: "var(--accent-gold)" }}>
+        <div className="collab-upload-gate-inner">
+          <div className="collab-upload-gate-badge">
+            <span className="pulse-emerald-ring" style={{ width: "6px", height: "6px", flexShrink: 0 }} />
+            <span className="tech-label-mono collab-upload-gate-badge-text">
               AUTHENTICATION REQUIRED TO SUBMIT REELS
             </span>
           </div>
 
-          <h3 className="disp-title-h2" style={{ fontSize: "28px", margin: "4px 0 14px" }}>
-            SIGN IN TO SUBMIT YOUR <em>9:16 BRAND REEL.</em>
+          <h3 className="disp-title-h2 collab-upload-gate-title">
+            SIGN IN TO SUBMIT YOUR <br className="mobile-br" /><em>9:16 BRAND REEL.</em>
           </h3>
 
-          <p style={{ color: "var(--text-muted)", fontSize: "13.5px", lineHeight: 1.6, margin: "0 0 24px" }}>
+          <p className="collab-upload-gate-desc">
             To protect brand partner briefs and enable automated digital escrow settlements, creators must sign in before submitting portfolio videos. Approved reels are featured dynamically in the <strong>Creator Stories & Hits</strong> carousel!
           </p>
 
-          <div style={{ display: "flex", gap: "10px", justifyContent: "center", flexWrap: "wrap", marginBottom: "28px" }}>
+          <div className="collab-upload-gate-chips">
             {["✓ Verified Creator ID", "✓ Automatic Safe-Zone Transcoding", "✓ Protected Escrow Payouts", "✓ Editorial Admin Review"].map((chip, i) => (
               <span
                 key={i}
-                className="mono"
-                style={{
-                  fontSize: "10px",
-                  background: "rgba(255, 255, 255, 0.04)",
-                  border: "1px solid var(--satin-border)",
-                  padding: "5px 12px",
-                  borderRadius: "99px",
-                  color: "var(--paper-soft)",
-                }}
+                className="collab-chip mono"
               >
                 {chip}
               </span>
@@ -262,17 +254,7 @@ function UploadPanel() {
 
           <Link
             to="/auth"
-            className="btn-magnetic"
-            style={{
-              padding: "12px 32px",
-              fontSize: "12.5px",
-              fontWeight: 800,
-              background: "linear-gradient(135deg, var(--accent-purple, #7025e1), #4c1d95)",
-              color: "#fff",
-              borderColor: "var(--accent-purple)",
-              boxShadow: "0 10px 25px rgba(112, 37, 225, 0.4)",
-              textDecoration: "none",
-            }}
+            className="btn-magnetic collab-upload-gate-btn"
           >
             SIGN IN / JOIN ONEVOO TO SUBMIT REEL ↗
           </Link>
@@ -1115,19 +1097,19 @@ export default function BeforeAfter() {
 
       {/* Header with Title and Trust Badges */}
       <div className="flow-header-wrap" style={{ position: "relative", zIndex: 2, textAlign: "center", marginBottom: "48px" }}>
-        <div style={{ display: "inline-flex", alignItems: "center", gap: "8px", marginBottom: "8px" }}>
-          <span className="pulse-emerald-ring" style={{ width: "7px", height: "7px" }} />
-          <span className="tech-label-mono" style={{ fontSize: "11px", letterSpacing: "0.15em" }}>
+        <div className="flow-badge-pill" style={{ display: "inline-flex", alignItems: "center", gap: "8px", marginBottom: "8px" }}>
+          <span className="pulse-emerald-ring" style={{ width: "7px", height: "7px", flexShrink: 0 }} />
+          <span className="tech-label-mono flow-header-badge-text">
             PARADIGM SHIFT • SOLO CREATOR HEADACHES VS. MANAGED CREATIVE OS
           </span>
         </div>
 
-        <h2 className="disp-title-h2" style={{ fontSize: "clamp(32px, 4.5vw, 54px)", margin: "6px 0 14px" }}>
+        <h2 className="disp-title-h2 flow-header-title">
           THE MODERN CREATOR WORKFLOW. <br />
           <em>FROM CHAOS TO CERTAINTY.</em>
         </h2>
 
-        <p style={{ maxWidth: "680px", margin: "0 auto", color: "var(--text-muted)", fontSize: "15px", lineHeight: 1.6 }}>
+        <p className="flow-header-desc">
           See how Onevoo transforms the broken legacy creator experience—chasing invoices for 90 days, endless unpaid revision loops, and vague DMs—into a streamlined, 100% escrow-backed creative engine.
         </p>
       </div>
@@ -1135,15 +1117,6 @@ export default function BeforeAfter() {
       {/* Side by Side Flow Comparison Cards */}
       <div
         className="flow-cards-container"
-        style={{
-          position: "relative",
-          zIndex: 2,
-          display: "grid",
-          gridTemplateColumns: "1fr 60px 1fr",
-          gap: "24px",
-          alignItems: "stretch",
-          marginBottom: "48px",
-        }}
       >
         {/* Solo Mode Card (The Broken Legacy Way) */}
         <article
@@ -1221,15 +1194,10 @@ export default function BeforeAfter() {
 
         {/* Center Animated Directional Hub */}
         <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: "10px",
-          }}
+          className="flow-arrow-hub"
         >
           <div
+            className="flow-arrow-icon"
             style={{
               width: "44px",
               height: "44px",
@@ -1242,12 +1210,13 @@ export default function BeforeAfter() {
               fontSize: "18px",
               boxShadow: "0 0 25px rgba(112, 37, 225, 0.5)",
               animation: "pulseGlow 2.5s infinite",
+              transition: "transform 0.3s ease",
             }}
             aria-hidden="true"
           >
             →
           </div>
-          <span className="mono" style={{ fontSize: "9px", color: "var(--accent-gold)", writingMode: "vertical-rl", letterSpacing: "0.1em" }}>
+          <span className="mono flow-arrow-text" style={{ fontSize: "9px", color: "var(--accent-gold)", letterSpacing: "0.1em" }}>
             UPGRADE
           </span>
         </div>
@@ -1329,10 +1298,10 @@ export default function BeforeAfter() {
       </div>
 
       {/* 4-Stage Visual Production Pipeline Stepper */}
-      <div style={{ position: "relative", zIndex: 2, marginBottom: "32px" }}>
+      <div style={{ position: "relative", zIndex: 2, marginBottom: "32px", width: "100%", boxSizing: "border-box" }}>
         <div style={{ textAlign: "center", marginBottom: "24px" }}>
           <span className="tech-label-mono" style={{ fontSize: "10.5px" }}>THE 4-STAGE PRODUCTION LIFECYCLE</span>
-          <h3 className="disp-title-h2" style={{ fontSize: "24px", margin: "4px 0 0" }}>
+          <h3 className="disp-title-h2 flow-stages-title" style={{ margin: "4px 0 0" }}>
             HOW AN ENTERPRISE DEAL <em>FLOWS ON ONEVOO</em>
           </h3>
         </div>
